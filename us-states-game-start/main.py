@@ -41,9 +41,7 @@ while game_is_on:
         screen.exit()
 
     if answer_state == "Exit":
-        a_states = set(states)
-        c_states = set(guessed_states)
-        unguessed_states = a_states - c_states
+        unguessed_states = [i for i in states if i not in guessed_states]
         messagebox.showinfo(title="Koniec gry", message=unguessed_states)
         time.sleep(4)
         screen.exitonclick()
