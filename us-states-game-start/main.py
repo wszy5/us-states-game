@@ -1,4 +1,5 @@
 import turtle
+from tkinter import messagebox
 import pandas
 import time
 
@@ -13,16 +14,18 @@ score = 0
 game_is_on = True
 data = pandas.read_csv(open("50_states.csv"))
 states = data["state"].to_list()
+guessed_states = []
 print(states)
 while game_is_on:
 
     answer_state = screen.textinput(title=f"Guess the State {score}/50", prompt="What's another state's name?")
     answer_state = answer_state.title()
 
-
     if answer_state in states:
+        guessed_states.append(answer_state)
         score += 1
-        e_data = data.where(data["state"] == answer_state).dropna()
+        # e_data = data.where(data["state"] == answer_state).dropna()
+        e_data = data[data.state == answer_state]
         new_x = float(e_data["x"])
         new_y = float(e_data["y"])
         added_state = turtle.Turtle()
@@ -33,12 +36,14 @@ while game_is_on:
         states.remove(answer_state)
 
     if states == []:
-        end = turtle.Turtle()
-        end.penup()
-        end.hideturtle()
-        end.goto(0,0)
-        end.write("Congratulations!")
+        messagebox.showinfo(title="Koniec gry", message="Gratulacje! :D")
         time.sleep(3)
         screen.exit()
 
-
+    if answer_state == "Exit":
+        a_states = set(states)
+        c_states = set(guessed_states)
+        unguessed_states = a_states - c_states
+        messagebox.showinfo(title="Koniec gry", message=unguessed_states)
+        time.sleep(4)
+        screen.exitonclick()
